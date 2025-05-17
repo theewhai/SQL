@@ -1,0 +1,118 @@
+USE sales_dataset;
+
+SELECT *
+FROM `sales dataset`;
+
+/* MONTHLY SALES REVENUE */
+SELECT DATE_FORMAT(`Order Date`, '%Y-%m') AS `Order Month`,
+	   SUM(Quantity * Amount) AS total_revenue
+FROM `sales dataset`
+GROUP BY `Order Month`
+ORDER BY `Order Month`;
+
+/* DAILY SALES TREND */
+SELECT `Order Date`,
+		SUM(Profit * Quantity) AS daily_revenue
+FROM `sales dataset`
+GROUP BY `Order Date`
+ORDER BY `Order Date` DESC;
+
+/* PROFIT BY REGION */
+SELECT State, 
+	   SUM(Profit) AS total_profit
+FROM `sales dataset`
+GROUP BY State
+ORDER BY total_profit;
+
+/*TOP 5 PROFITABLE PRODUCTS*/
+SELECT `Sub-Category`, 
+		SUM(Profit) AS total_profit
+FROM `sales dataset`
+GROUP BY `Sub-Category`
+ORDER BY total_profit DESC
+LIMIT 5;
+
+/* MOST PROFITABLE PRODUCT CATEGORY */
+SELECT Category, 
+	   SUM(Profit) AS total_profit
+FROM `sales dataset`
+GROUP BY Category
+ORDER BY total_profit DESC
+LIMIT 1;
+
+SELECT `Category`,
+		COUNT(DISTINCT `Sub-Category`) AS ProductCount
+FROM `sales dataset`
+GROUP BY `Category`;
+
+SELECT *
+FROM `sales dataset`;
+
+/* TOTAL SALES */
+SELECT SUM(Amount * Quantity) AS Total_Revenue
+FROM `sales dataset`;
+
+/* TOTAL PROFIT */
+SELECT SUM(Profit)
+FROM `sales dataset`;
+
+/* PROFIT MARGIN BY PRODUCT IN PERCENTAGE */
+SELECT 	`Sub-Category`,
+		SUM(Profit) / SUM(Quantity * Amount) * 100 AS ProfitMarginPercentage
+FROM `sales dataset`
+GROUP BY `Sub-Category`
+ORDER BY ProfitMarginPercentage DESC;
+
+/* OVERALL PROFIT PERCENTAGE */
+SELECT SUM(Profit), SUM(Amount * Quantity),
+	   SUM(Profit) / SUM(Amount * Quantity) * 100 AS ProfitPercentage
+FROM `sales dataset`;
+
+/* PROFIT PERCENTAGE BY PRODUCT CATEGORY*/
+SELECT Category,
+	   SUM(Profit) / SUM(Amount * Quantity) * 100 PercentageMarginByProductCategory
+FROM `sales dataset`
+GROUP BY Category
+ORDER BY  PercentageMarginByProductCategory DESC;
+
+/* PROFIT MARGIN */
+SELECT `Sub-Category`,
+		SUM(Profit) / SUM(Amount * Quantity) LowProfitMargin
+FROM `sales dataset`
+GROUP BY `Sub-Category`
+HAVING LowProfitMargin < 10
+ORDER BY LowProfitMargin;
+
+/* AVERAGE UNIT PER ORDER */
+SELECT AVG(Quantity) AS AverageUnitPerOrder
+FROM `sales dataset`;
+
+/* ORDERS OVER TIME */
+SELECT DATE (`Order Date`) AS `Date`,
+			COUNT(DISTINCT `Order ID`) AS Orders
+FROM `sales dataset`
+GROUP BY `Date`
+ORDER BY `Date` DESC;
+
+/* TOP 5 CUSTOMERS BY AMOUNT SPENT */
+SELECT CustomerName AS customer,
+	   SUM(Quantity * Amount) AS AmountSpent
+FROM `sales dataset`
+GROUP BY customer
+ORDER BY AmountSpent DESC
+LIMIT 5;
+
+/* LATEST ORDER PER CUSTOMER */
+SELECT DISTINCT(CustomerName),
+	   MAX(`Order Date`) AS RecentOrder
+FROM `sales dataset`
+GROUP BY CustomerName
+ORDER BY RecentOrder DESC;
+
+/* HOW FREQUENT THE CUSTOMERS ARE */
+SELECT CustomerName,
+	   COUNT(DISTINCT `Order ID`) AS Frequency
+FROM `sales dataset`
+GROUP BY CustomerName
+ORDER BY Frequency DESC;
+
